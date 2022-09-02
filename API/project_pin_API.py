@@ -6,6 +6,12 @@ from kafka import KafkaProducer
 
 app = FastAPI()
 
+producer = KafkaProducer(
+    bootstrap_servers='localhost:9092',
+    client_id='Pintrest data producer', 
+    value_serializer=lambda pinmessage: dumps(pinmessage).encode("ascii")
+)
+
 
 
 class Data(BaseModel):
@@ -24,7 +30,8 @@ class Data(BaseModel):
 
 @app.post("/pin/")
 def get_db_row(item: Data):
-    data = dict(item)
+    pinmessage = dict(item)
+    producer.send(topic="MyFirstKafkaTopic", value=pinmessage)
     return item
 
 
