@@ -27,7 +27,6 @@ class Data(BaseModel):
     downloaded: int
     save_location: str
 
-
 @app.post("/pin/")
 def get_db_row(item: Data):
     pinmessage = dict(item)
