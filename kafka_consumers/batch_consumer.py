@@ -1,7 +1,14 @@
 from kafka import KafkaConsumer
 from json import loads, dumps
+from dotenv import load_dotenv
+import datetime
 import boto3
-s3_bucket = 'pintrest-data'
+import time
+import os
+
+load_dotenv()
+
+s3_bucket = os.environ["S3_BUCKET"]
 s3_client = boto3.client('s3')
 
 data_batch_consumer = KafkaConsumer(
@@ -13,6 +20,11 @@ data_batch_consumer = KafkaConsumer(
 data_batch_consumer.subscribe(topics="MyFirstKafkaTopic")
 
 for message in data_batch_consumer:
-    print(message[6]["unique_id"])
-    s3_client.put_object(Body=dumps(message), Bucket=s3_bucket, Key=f'{message[6]["unique_id"]}.json')
+    # Create timestamp for S3 key value
+    timestamp = time.time()
+    # Turn timestamp into string for key value
+    timestamp_str = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H:%M:%S')
+    s3_key = f'{message[6]["index"]}_{timestamp_str}'
+    print(s3_key)
+    s3_client.put_object(Body=dumps(message), Bucket=s3_bucket, Key=f'{s3_key}.json')
     
