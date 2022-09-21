@@ -23,8 +23,9 @@ for message in data_batch_consumer:
     # Create timestamp for S3 key value
     timestamp = time.time()
     # Turn timestamp into string for key value
-    timestamp_str = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H:%M:%S')
+    timestamp_str = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
     s3_key = f'{message[6]["index"]}_{timestamp_str}'
     print(s3_key)
-    s3_client.put_object(Body=dumps(message), Bucket=s3_bucket, Key=f'{s3_key}.json')
+    print(dumps(message[6]))
+    s3_client.put_object(Body=dumps(message[6]), Bucket=s3_bucket, Key=f'{s3_key}.json')
     
