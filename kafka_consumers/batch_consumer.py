@@ -28,4 +28,3 @@ for message in data_batch_consumer:
     print(s3_key)
     print(dumps(message[6]))
     s3_client.put_object(Body=dumps(message[6]), Bucket=s3_bucket, Key=f'{s3_key}.json')
-    
