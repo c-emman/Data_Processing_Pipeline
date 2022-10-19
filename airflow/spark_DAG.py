@@ -1,8 +1,17 @@
+# import findspark
+# import os
+import sys
+# findspark.init(os.environ["SPARK_HOME"])
+# from pyspark.sql import SparkSession
+# from pyspark import SparkContext, SparkConf
+# from pyspark.sql.functions import when, col, regexp_replace, split
 from airflow.models import DAG
 from datetime import datetime
 from datetime import timedelta
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python import PythonOperator
+
+sys.path.append("/home/christian/Desktop/pintrest_data_processing_pipeline")
 import spark_cassandra.s3_to_spark_to_cassandra as sc
 
 spark_job = sc.Spark_DAG()
@@ -30,4 +39,3 @@ with DAG(dag_id='spark_dag',
         task_id='run_spark_job',
         python_callable=spark_job.run_s3_to_spark_to_cassandra,
     )
-
